@@ -18,17 +18,13 @@ public class TaskRepository {
     private TaskRepository() {
         for (int i = 0; i < sIntSize; i++) {
             State state = generateRandomState();
-            ColorTask colorTask;
-            if (i % 2 == 0) {
-                colorTask = ColorTask.TealLight;
-            } else colorTask = ColorTask.TealDark;
-            Task task = new Task(sNameTask, state, colorTask);
+            Task task = new Task(sNameTask, state);
             mTaskList.add(task);
         }
 
     }
 
-    private State generateRandomState() {
+    public State generateRandomState() {
         State[] states = State.values();
         int length = states.length;
         int rndIndex = new Random().nextInt(length);
@@ -52,22 +48,6 @@ public class TaskRepository {
         mTaskList = taskList;
     }
 
-    public static int getIntSize() {
-        return sIntSize;
-    }
-
-    public static void setIntSize(int intSize) {
-        sIntSize = intSize;
-    }
-
-    public static String getNameTask() {
-        return sNameTask;
-    }
-
-    public static void setNameTask(String nameTask) {
-        sNameTask = nameTask;
-    }
-
     public static void setSizeTaskAndNameTask(int sSize, String sName) {
         sIntSize = sSize;
         sNameTask = sName;
@@ -84,6 +64,5 @@ public class TaskRepository {
         }
         return null;
     }
-
 
 }

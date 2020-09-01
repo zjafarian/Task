@@ -7,14 +7,14 @@ public class Task implements Serializable {
     private UUID mUUIDTask;
     private String mStringNameTask;
     private State mStateTask;
-    private ColorTask mColorTask;
 
 
-    public Task(String stringNameTask, State stateTask, ColorTask colorTask) {
+
+    public Task(String stringNameTask, State stateTask) {
         mUUIDTask = UUID.randomUUID();
         mStringNameTask = stringNameTask;
         mStateTask = stateTask;
-        mColorTask = colorTask;
+
     }
 
     public UUID getUUIDTask() {
@@ -37,11 +37,4 @@ public class Task implements Serializable {
         mStateTask = stateTask;
     }
 
-    public ColorTask getColorTask() {
-        return mColorTask;
-    }
-
-    public void setColorTask(ColorTask colorTask) {
-        mColorTask = colorTask;
-    }
 }
