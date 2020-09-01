@@ -40,9 +40,9 @@ public class ListTaskFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mName = getActivity().getIntent().getStringExtra(CreateTaskFragment.EXTRA_SEND_NAME_TASK);
+        mNumber= Integer.valueOf(getActivity().getIntent().getStringExtra(CreateTaskFragment.EXTRA_SEND_NUMBER_TASK));
         TaskRepository.setSizeTaskAndNameTask(mNumber, mName);
-
     }
 
     @Override
