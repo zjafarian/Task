@@ -29,8 +29,10 @@ import static com.example.task.model.ColorTask.TealLight;
 public class ListTaskFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private String mName;
-    private int mNumber;
+    private int mNumber = 0;
     private TaskRepository mTaskRepository;
+    private ImageButton mImgButtonAddTask;
+
 
 
     public ListTaskFragment() {
@@ -41,8 +43,9 @@ public class ListTaskFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mName = getActivity().getIntent().getStringExtra(CreateTaskFragment.EXTRA_SEND_NAME_TASK);
-        mNumber= Integer.valueOf(getActivity().getIntent().getStringExtra(CreateTaskFragment.EXTRA_SEND_NUMBER_TASK));
+        mNumber = Integer.valueOf(getActivity().getIntent().getStringExtra(CreateTaskFragment.EXTRA_SEND_NUMBER_TASK));
         TaskRepository.setSizeTaskAndNameTask(mNumber, mName);
+        mTaskRepository = TaskRepository.getInstance();
     }
 
     @Override
@@ -55,9 +58,10 @@ public class ListTaskFragment extends Fragment {
         return view;
     }
 
-
     private void findView(View view) {
         mRecyclerView = view.findViewById(R.id.recycler_view_task_list);
+        mImgButtonAddTask= view.findViewById(R.id.image_btn_add_task);
+
     }
 
     private void initViews() {
@@ -74,6 +78,7 @@ public class ListTaskFragment extends Fragment {
         private TextView mTextVieWTaskName;
         private TextView mTextViewState;
         private Task mTask;
+        private CardView mCardView;
 
         public TaskHolder(@NonNull View itemView) {
             super(itemView);
@@ -89,9 +94,10 @@ public class ListTaskFragment extends Fragment {
             mImageDone = itemView.findViewById(R.id.image_done);
             mTextVieWTaskName = itemView.findViewById(R.id.text_name);
             mTextViewState = itemView.findViewById(R.id.text_state);
+            mCardView = itemView.findViewById(R.id.card_view);
         }
 
-        public void bindTask(Task task) {
+        public void bindTask(Task task, int position) {
             mTask = task;
             mTextVieWTaskName.setText(mTask.getStringNameTask());
             switch (mTask.getStateTask()) {
@@ -114,6 +120,10 @@ public class ListTaskFragment extends Fragment {
                     mTextViewState.setText("TODO");
                     break;
             }
+            if (position % 2 == 0) {
+                mCardView.setBackgroundResource(R.color.colorTealLight);
+            } else mCardView.setBackgroundResource(R.color.colorTealDark);
+
         }
 
 
@@ -121,8 +131,7 @@ public class ListTaskFragment extends Fragment {
 
     private class TaskAdapter extends RecyclerView.Adapter<TaskHolder> {
         private List<Task> mListTask;
-        private CardView mCardView;
-        private ImageButton mImgButtonAddTask;
+
 
         public TaskAdapter(List<Task> listTask) {
             mListTask = listTask;
@@ -141,35 +150,15 @@ public class ListTaskFragment extends Fragment {
         public TaskHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
             View view = layoutInflater.inflate(R.layout.task_row_list, parent, false);
-            setViewById(view);
-            setListener();
             TaskHolder taskHolder = new TaskHolder(view);
             return taskHolder;
         }
 
-        private void setListener() {
-            mImgButtonAddTask.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Task task = new Task(mName, mTaskRepository.generateRandomState());
-                    mTaskRepository.insertTask(task);
-                    mListTask = mTaskRepository.getTaskList();
-                }
-            });
-        }
-
-        private void setViewById(View view) {
-            mCardView = view.findViewById(R.id.card_view);
-            mImgButtonAddTask = view.findViewById(R.id.image_btn_add_task);
-        }
 
         @Override
         public void onBindViewHolder(@NonNull TaskHolder holder, int position) {
             Task task = mListTask.get(position);
-            holder.bindTask(task);
-            if (position % 2 == 0) {
-                mCardView.setBackgroundResource(R.color.colorTealLight);
-            } else  mCardView.setBackgroundResource(R.color.colorTealDark);
+            holder.bindTask(task,position);
         }
 
         @Override

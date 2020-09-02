@@ -6,4 +6,5 @@
     <string name="hint_input_number">Input Number of Tasks</string>
     <string name="text_btn_create">Create</string>
     <string name="hint_write_task">Write Your Task</string>
+    <string name="message_empty_field">Fields are Empty</string>
 </resources>

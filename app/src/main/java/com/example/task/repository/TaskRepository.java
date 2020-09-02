@@ -4,13 +4,14 @@ import com.example.task.model.ColorTask;
 import com.example.task.model.State;
 import com.example.task.model.Task;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
 public class TaskRepository {
     private static TaskRepository sInstance;
-    private List<Task> mTaskList;
+    private List<Task> mTaskList = new ArrayList<>();
     private static int sIntSize;
     private static String sNameTask;
 
@@ -26,12 +27,15 @@ public class TaskRepository {
 
     public State generateRandomState() {
         State[] states = State.values();
-        int length = states.length;
-        int rndIndex = new Random().nextInt(length);
+        int length = states.length - 1;
+        int rndIndex = (int) (Math.random() * (length - 0 + 1) + 0);
         return states[rndIndex];
     }
 
     public static TaskRepository getInstance() {
+        if (sInstance == null)
+            sInstance = new TaskRepository();
+
         return sInstance;
     }
 
@@ -53,12 +57,12 @@ public class TaskRepository {
         sNameTask = sName;
     }
 
-    public void insertTask (Task task){
+    public void insertTask(Task task) {
         mTaskList.add(task);
     }
 
-    public Task getTask (UUID uuid){
-        for (Task task: mTaskList) {
+    public Task getTask(UUID uuid) {
+        for (Task task : mTaskList) {
             if (task.getUUIDTask().equals(uuid))
                 return task;
         }

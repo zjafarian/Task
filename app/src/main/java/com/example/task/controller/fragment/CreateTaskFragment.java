@@ -53,14 +53,16 @@ public class CreateTaskFragment extends Fragment {
         mButtonCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mTextNameTask.getText().equals("") || mTextNumber.getText().equals("")){
-                    Toast toast = Toast.makeText(getActivity(),"",Toast.LENGTH_LONG);
+                String name = mTextNameTask.getText().toString().trim();
+                String number = mTextNumber.getText().toString().trim();
+                if (name.equals("") || number.equals("") || name.equals(" ") || number.equals(" ")){
+                    Toast toast = Toast.makeText(getActivity(),R.string.message_empty_field,Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.BOTTOM,0,0);
                     toast.show();
                 } else {
                     Intent intent = new Intent(getActivity(), TaskListActivity.class);
-                    intent.putExtra(EXTRA_SEND_NAME_TASK,mTextNameTask.getText());
-                    intent.putExtra(EXTRA_SEND_NUMBER_TASK,mTextNumber.getText());
+                    intent.putExtra(EXTRA_SEND_NAME_TASK,name);
+                    intent.putExtra(EXTRA_SEND_NUMBER_TASK,number);
                     startActivity(intent);
                 }
             }
