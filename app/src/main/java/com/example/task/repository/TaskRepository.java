@@ -4,12 +4,13 @@ import com.example.task.model.ColorTask;
 import com.example.task.model.State;
 import com.example.task.model.Task;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-public class TaskRepository {
+public class TaskRepository implements Serializable {
     private static TaskRepository sInstance;
     private List<Task> mTaskList = new ArrayList<>();
     private static int sIntSize;

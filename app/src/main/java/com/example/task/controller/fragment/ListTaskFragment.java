@@ -25,6 +25,10 @@ import java.util.List;
 
 
 public class ListTaskFragment extends Fragment {
+    public static final String SAVE_NAME = "save_name";
+    public static final String SAVE_NUMBER = "save_number";
+    public static final String SAVE_REPOSITORY = "save_repository";
+    public static final String SAVE_CHECK_ORIENTATION = "save_check_orientation";
     private RecyclerView mRecyclerView;
     private String mName;
     private int mNumber = 0;
@@ -49,6 +53,12 @@ public class ListTaskFragment extends Fragment {
         if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE)
             checkOrientation = true;
         else checkOrientation = false;
+        if (savedInstanceState!=null){
+            mName=savedInstanceState.getString(SAVE_NAME);
+            mNumber=savedInstanceState.getInt(SAVE_NUMBER);
+            mTaskRepository= (TaskRepository) savedInstanceState.getSerializable(SAVE_REPOSITORY);
+            checkOrientation=savedInstanceState.getBoolean(SAVE_CHECK_ORIENTATION);
+        }
     }
 
     @Override
@@ -93,6 +103,14 @@ public class ListTaskFragment extends Fragment {
         mRecyclerView.setAdapter(taskAdapter);
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(SAVE_NAME,mName);
+        outState.putInt(SAVE_NUMBER,mNumber);
+        outState.putSerializable(SAVE_REPOSITORY,mTaskRepository);
+        outState.putBoolean(SAVE_CHECK_ORIENTATION,checkOrientation);
+    }
 
     private void initViewsPortrait() {
         setListener();
