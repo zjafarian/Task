@@ -1,10 +1,12 @@
 package com.example.task.controller.fragment;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,14 +18,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.task.R;
-import com.example.task.model.ColorTask;
 import com.example.task.model.Task;
 import com.example.task.repository.TaskRepository;
 
 import java.util.List;
-
-import static com.example.task.model.ColorTask.TealDark;
-import static com.example.task.model.ColorTask.TealLight;
 
 
 public class ListTaskFragment extends Fragment {
@@ -31,8 +29,7 @@ public class ListTaskFragment extends Fragment {
     private String mName;
     private int mNumber = 0;
     private TaskRepository mTaskRepository;
-    private ImageButton mImgButtonAddTask;
-
+    private boolean checkOrientation = false;
 
 
     public ListTaskFragment() {
@@ -46,6 +43,10 @@ public class ListTaskFragment extends Fragment {
         mNumber = Integer.valueOf(getActivity().getIntent().getStringExtra(CreateTaskFragment.EXTRA_SEND_NUMBER_TASK));
         TaskRepository.setSizeTaskAndNameTask(mNumber, mName);
         mTaskRepository = TaskRepository.getInstance();
+        int currentOrientation = getResources().getConfiguration().orientation;
+        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE)
+            checkOrientation = true;
+        else checkOrientation = false;
     }
 
     @Override
@@ -54,17 +55,28 @@ public class ListTaskFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_list_task, container, false);
         findView(view);
-        initViews();
+        if (checkOrientation)
+            initViewsLandscape();
+        else
+            initViewsPortrait();
         return view;
     }
 
+
     private void findView(View view) {
         mRecyclerView = view.findViewById(R.id.recycler_view_task_list);
-        mImgButtonAddTask= view.findViewById(R.id.image_btn_add_task);
-
     }
 
-    private void initViews() {
+    private void initViewsLandscape() {
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        List<Task> tasks = mTaskRepository.getTaskList();
+        TaskAdapter taskAdapter = new TaskAdapter(tasks);
+        mRecyclerView.setAdapter(taskAdapter);
+    }
+
+
+    private void initViewsPortrait() {
+
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         List<Task> tasks = mTaskRepository.getTaskList();
         TaskAdapter taskAdapter = new TaskAdapter(tasks);
@@ -79,12 +91,11 @@ public class ListTaskFragment extends Fragment {
         private TextView mTextViewState;
         private Task mTask;
         private CardView mCardView;
+        private ImageButton mImgButtonAddTask;
 
         public TaskHolder(@NonNull View itemView) {
             super(itemView);
             setViewById(itemView);
-
-
         }
 
 
@@ -95,6 +106,8 @@ public class ListTaskFragment extends Fragment {
             mTextVieWTaskName = itemView.findViewById(R.id.text_name);
             mTextViewState = itemView.findViewById(R.id.text_state);
             mCardView = itemView.findViewById(R.id.card_view);
+            mImgButtonAddTask = itemView.findViewById(R.id.image_btn_add_task);
+
         }
 
         public void bindTask(Task task, int position) {
@@ -123,6 +136,7 @@ public class ListTaskFragment extends Fragment {
             if (position % 2 == 0) {
                 mCardView.setBackgroundResource(R.color.colorTealLight);
             } else mCardView.setBackgroundResource(R.color.colorTealDark);
+
 
         }
 
@@ -158,7 +172,7 @@ public class ListTaskFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull TaskHolder holder, int position) {
             Task task = mListTask.get(position);
-            holder.bindTask(task,position);
+            holder.bindTask(task, position);
         }
 
         @Override
