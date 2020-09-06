@@ -30,6 +30,8 @@ public class ListTaskFragment extends Fragment {
     private int mNumber = 0;
     private TaskRepository mTaskRepository;
     private boolean checkOrientation = false;
+    private ImageButton mImgButtonAddTask;
+    private List<Task> tasks;
 
 
     public ListTaskFragment() {
@@ -62,25 +64,40 @@ public class ListTaskFragment extends Fragment {
         return view;
     }
 
+    private void setListener() {
+        mImgButtonAddTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Task task = new Task(mName,mTaskRepository.generateRandomState());
+                mTaskRepository.insertTask(task);
+            }
+        });
+    }
+
 
     private void findView(View view) {
         mRecyclerView = view.findViewById(R.id.recycler_view_task_list);
+        mImgButtonAddTask = view.findViewById(R.id.image_btn_add_task);
+
     }
 
     private void initViewsLandscape() {
+        setListener();
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        List<Task> tasks = mTaskRepository.getTaskList();
+        setTaskAdaptar();
+    }
+
+    private void setTaskAdaptar() {
+        tasks = mTaskRepository.getTaskList();
         TaskAdapter taskAdapter = new TaskAdapter(tasks);
         mRecyclerView.setAdapter(taskAdapter);
     }
 
 
     private void initViewsPortrait() {
-
+        setListener();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        List<Task> tasks = mTaskRepository.getTaskList();
-        TaskAdapter taskAdapter = new TaskAdapter(tasks);
-        mRecyclerView.setAdapter(taskAdapter);
+        setTaskAdaptar();
     }
 
     private class TaskHolder extends RecyclerView.ViewHolder {
@@ -91,7 +108,6 @@ public class ListTaskFragment extends Fragment {
         private TextView mTextViewState;
         private Task mTask;
         private CardView mCardView;
-        private ImageButton mImgButtonAddTask;
 
         public TaskHolder(@NonNull View itemView) {
             super(itemView);
@@ -106,7 +122,7 @@ public class ListTaskFragment extends Fragment {
             mTextVieWTaskName = itemView.findViewById(R.id.text_name);
             mTextViewState = itemView.findViewById(R.id.text_state);
             mCardView = itemView.findViewById(R.id.card_view);
-            mImgButtonAddTask = itemView.findViewById(R.id.image_btn_add_task);
+
 
         }
 
